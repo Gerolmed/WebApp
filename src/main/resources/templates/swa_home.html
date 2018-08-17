@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <!--    Important: Known issues with this dialog/page
+            Thymeleaf + Bootstraps + DataTables is unstable. According to several forums and my own experience this issues can be solved
+            but it would potentially take a lot of time and in depth knowledge of javascript and the frameworks. Therefore I used several
+            workarounds which I found during many hours of trying.
+
+            1)  The javascript and stylesheet components are loaded in the head without Thymeleaf fragments. Using Thymeleaf fragments
+                to load the javascript/stylesheet dependencies breaks DataTables.
+
+            2)  DataTables don`t go well with Bootstraps dropdown menus. Therefore the navbar was changed to not include any dropdown menu.
+                It is also not (easily) possible to use any dropdown menu on a page which uses DataTables. Therefore I designed the page without
+                dropdown menus.
+
+            3)  DataTables don`t go well with Bootstraps aria-labels/data-dismiss. Therefore the aria-label/data-dismiss is not working properly. I used a real
+                link to reload the page instead of a javascript event to close the respective element.
+    -->
+
+    <head>
+        <title>SalesWebApp Home</title>
+
+        <!-- Know issue: Number 1 -->
+        <script type="text/javascript" th:src="@{../webjars/bootstrap/3.3.7/js/bootstrap.min.js}" />
+        <script type="text/javascript" th:src="@{../webjars/jquery/3.2.1/jquery.min.js}" />
+        <script type="text/javascript" th:src="@{../webjars/datatables/1.10.12/js/jquery.dataTables.js}" />
+        <link rel="stylesheet" type="text/css" th:href="@{../webjars/bootstrap/3.3.7/css/bootstrap.min.css}" />
+        <link rel="stylesheet" type="text/css" th:href="@{/css/swa.css}" />
+        <link rel="stylesheet" type="text/css" th:href="@{../webjars/datatables/1.10.12/css/jquery.dataTables.css}" />
+
+        <script th:inline="none">
+            $(document).ready(function(){
+                $('#restaurantTable').DataTable({});
+                $('#toDoTable').DataTable({});
+            });
+        </script>
+    </head>
+
+    <body>
+        <div th:replace="fragments/swa_navbarHome :: swa_navbarHome(payment=${currentPayment})"></div>
+
+        <div class="container">
+            <!--    Shows the status of the last transaction.
+                    Known issue: Number 3 -->
+            <div style="width: 75%">
+                <div th:if="${param.profileChangeSuccess != null}" class="alert alert-success">
+                    <a href="/swa/home" class="close" data-dismiss="alert" aria-label="close" title="close">x</a>
+                    <th th:text="#{home.success.profileChangeSuccess}" />
+                </div>
+
+                <div th:if="${param.profileWasChangedMeanwhile != null}" class="alert alert-danger">
+                    <a href="/swa/home" class="close" data-dismiss="alert" aria-label="close" title="close">x</a>
+                    <th th:text="#{home.error.profileWasChangedMeanwhile}" />
+                </div>
+
+                <div th:if="${param.noValidAccessToRestaurant != null}" class="alert alert-danger">
+                    <a href="/swa/home" class="close" data-dismiss="alert" aria-label="close" title="close">x</a>
+                    <th th:text="#{home.error.noValidAccessToRestaurant}" />
+                </div>
+
+                <div th:if="${param.newRestaurantAddedSuccessfully != null}" class="alert alert-success">
+                    <a href="/swa/home" class="close" data-dismiss="alert" aria-label="close" title="close">x</a>
+                    <th th:text="#{home.success.newRestaurantAddedSuccessfully}" />
+                </div>
+
+                <div th:if="${param.restaurantWasChangedMeanwhile != null}" class="alert alert-danger">
+                    <a href="/swa/home" class="close" data-dismiss="alert" aria-label="close" title="close">x</a>
+                    <th th:text="#{home.error.restaurantWasChangedMeanwhile}" />
+                </div>
+
+                <div th:if="${param.restaurantChangeSuccess != null}" class="alert alert-success">
+                    <a href="/swa/home" class="close" data-dismiss="alert" aria-label="close" title="close">x</a>
+                    <th th:text="#{home.success.offerChangeSuccess}" />
+                </div>
+
+                <div th:if="${param.offerChangeSuccess != null}" class="alert alert-success">
+                    <a href="/swa/home" class="close" data-dismiss="alert" aria-label="close" title="close">x</a>
+                    <th th:text="#{home.success.offerChangeSuccess}" />
+                </div>
+
+                <div th:if="${param.offerWasChangedMeanwhile != null}" class="alert alert-danger">
+                    <a href="/swa/home" class="close" data-dismiss="alert" aria-label="close" title="close">x</a>
+                    <th th:text="#{home.error.offerWasChangedMeanwhile}" />
+                </div>
+
+                <div th:if="${param.newOfferAddedSuccessfully != null}" class="alert alert-success">
+                    <a href="/swa/home" class="close" data-dismiss="alert" aria-label="close" title="close">x</a>
+                    <th th:text="#{home.success.newOfferAddedSuccessfully}" />
+                </div>
+
+                <div th:if="${param.offerControllerError != null}" class="alert alert-danger">
+                    <a href="/swa/home" class="close" data-dismiss="alert" aria-label="close" title="close">x</a>
+                    <th th:text="#{home.error.offerControllerError}" />
+                </div>
+
+                <div th:if="${param.noValidAccessToToDo != null}" class="alert alert-danger">
+                    <a href="/swa/home" class="close" data-dismiss="alert" aria-label="close" title="close">x</a>
+                    <th th:text="#{home.error.noValidAccessToToDo}" />
+                </div>
+
+                <div th:if="${param.changeRequestDeleted != null}" class="alert alert-success">
+                    <a href="/swa/home" class="close" data-dismiss="alert" aria-label="close" title="close">x</a>
+                    <th th:text="#{home.success.offerChangeRequestDeleted}" />
+                </div>
+
+                <div th:if="${param.offerChangeRequestSuccess != null}" class="alert alert-success">
+                    <a href="/swa/home" class="close" data-dismiss="alert" aria-label="close" title="close">x</a>
+                    <th th:text="#{home.success.offerChangeRequestSaved}" />
+                </div>
+
+                <div th:if="${param.toDoListEntryForOfferExists != null}" class="alert alert-danger">
+                    <a href="/swa/home" class="close" data-dismiss="alert" aria-label="close" title="close">x</a>
+                    <th th:text="#{home.error.toDoListEntryForOfferExists}" />
+                </div>
+
+                <div th:if="${param.doNotUseForthAndBackOfTheBrowserToNavigate != null}" class="alert alert-danger">
+                    <a href="/swa/home" class="close" data-dismiss="alert" aria-label="close" title="close">x</a>
+                    <th th:text="#{home.error.doNotUseForthAndBackOfTheBrowserToNavigate}" />
+                </div>
+
+            </div>
+
+        <div class="page-header">
+            <h3><th th:text="#{home.label.toDoTable.heading}" /></h3>
+        </div>
+
+        <div style="max-height: 500px; overflow: auto">
+        <table id="toDoTable" class="table table-striped table-bordered dataTables-scrollHead" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th> <span th:text="#{home.label.toDoTable.restaurant}" /> </th>
+                <th>
+                    <span th:text="#{home.label.toDoTable.id}" />
+                    <span class="glyphicon glyphicon-question-sign" th:title="#{home.label.tooltip.toDoTable.id}" />
+                </th>
+                <th> <span th:text="#{home.label.toDoTable.RequestTyp}" /> </th>
+                <th> <span th:text="#{home.label.toDoTable.timestamp}" /> </th>
+                <th> <span th:text="#{home.label.toDoTable.read}" /> </th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="toDo : ${toDos}">
+                <td> <a class="btn-link" th:href="@{/swa/restaurant(id=${toDo.restaurantId})}" th:text="${toDo.restaurantName}" /> </td>
+                <td>
+                    <!-- Displays the processId(id) as a link if the requestTyp is a changeRequest -->
+                    <div th:switch="${toDo.requestTyp}">
+                        <span th:case="'Änderung freigeben'"> <a class="btn-link" th:href="@{/swa/offerChangeRequest(id=${toDo.id})}" th:text="${toDo.id}" /> </span>
+                        <span th:case="'Besuchsaufforderung'"> <span th:text="${toDo.id}" /> </span>
+                        <span th:case="'Umsatzwarnung'"> <span th:text="${toDo.id}" /> </span>
+                    </div>
+                </td>
+
+                <td>
+                    <div th:switch="${toDo.requestTyp}">
+                        <span th:case="'Änderung freigeben'"> <span th:text="#{home.label.toToTable.RequestTypId1}" /> </span>
+                        <span th:case="'Besuchsaufforderung'"> <span th:text="#{home.label.toToTable.RequestTypId2}" /> </span>
+                        <span th:case="'Umsatzwarnung'"> <span th:text="#{home.label.toToTable.RequestTypId3}" /> </span>
+                    </div>
+                </td>
+
+                <td> <span th:text="${toDo.timestamp}" /> </td>
+
+                <td>
+                    <div th:switch="${toDo.requestTyp}">
+                        <span th:case="'Änderung freigeben'">  </span>
+                        <span th:case="'Besuchsaufforderung'">
+                            <a th:href="@{/swa/home/remove(toDo=${toDo.id})}" class="label label-danger">
+                                <span class="glyphicon glyphicon-remove" /> <span style="font-size: 125%" th:text="#{universal.label.delete}" />
+                            </a>
+                        </span>
+                        <span th:case="'Umsatzwarnung'">
+                            <a th:href="@{/swa/home/remove(toDo=${toDo.id})}" class="label label-danger">
+                                <span class="glyphicon glyphicon-remove" /> <span style="font-size: 125%" th:text="#{universal.label.delete}" />
+                            </a>
+                        </span>
+                    </div>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+        </div>
+
+        <div class="page-header">
+            <h3><th th:text="#{home.label.restaurantTable.heading}" /></h3>
+        </div>
+
+        <div style="max-height: 500px; overflow: auto">
+        <table id="restaurantTable" class="table table-striped table-bordered dataTables-scrollHead" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th> <span th:text="#{home.label.restaurantTable.name}" /> </th>
+                <th> <span th:text="#{home.label.restaurantTable.email}" /> </th>
+                <th> <span th:text="#{home.label.restaurantTable.phone}" /> </th>
+                <th> <span th:text="#{home.label.restaurantTable.street}" /> </th>
+                <th> <span th:text="#{home.label.restaurantTable.city}" /> </th>
+                <th> <span th:text="#{home.label.restaurantTable.zip}" /> </th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="restaurant : ${restaurants}">
+                <td> <a class="btn-link" th:href="@{/swa/restaurant(id=${restaurant.id})}" th:text="${restaurant.name}" /> </td>
+                <td> <span th:text="${restaurant.email}" /> </td>
+                <td> <span th:text="${restaurant.phone}" /> </td>
+                <td> <span th:text="${restaurant.street}" /> <span th:text="${restaurant.streetNumber}" /> </td>
+                <td> <span th:text="${restaurant.city}" /> </td>
+                <td> <span th:text="${restaurant.zip}" /> </td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+    <div th:replace="fragments/swa_footer :: swa_footer"></div>
+    </body>
+
+</html>
+
+
+
+
+

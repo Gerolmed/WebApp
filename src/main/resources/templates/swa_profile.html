@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head th:include="fragments/swa_head :: swa_head">
+        <title>SalesWebApp User-Profile</title>
+    </head>
+
+    <body>
+    <div th:replace="fragments/swa_navbar :: swa_navbar"></div>
+
+    <div class="container">
+
+        <div class="page-header">
+            <h3><th th:text="#{profile.label.heading}" /></h3>
+        </div>
+
+        <div class="row">
+        <form th:action="@{/swa/saveProfile}" th:object="${profileForm}" method="post">
+
+            <ul th:if="${#fields.hasErrors('*')}">
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}" class="text-danger" />
+            </ul>
+
+            <div class="col-lg-6 col-lg-md-12 col-sm-12 col-xs-12">
+                <p>
+                    <label class="glyphicon glyphicon-question-sign" th:title="#{profile.label.tooltip.headingUserData}"></label>
+                    <u> <label th:text="#{profile.label.headingUserData}" /> </u>
+                </p>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label class="col-lg-4 col-lg-md-2 col-sm-3 span-top-padding"> <th th:text="#{profile.label.firstName}" /> </label>
+                        <span th:classappend="${#fields.hasErrors('*{firstName}')}? has-error">
+                            <input type="text" th:field="*{firstName}" class="form-control" />
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label class="col-lg-4 col-lg-md-2 col-sm-3 span-top-padding"> <th th:text="#{profile.label.secondName}" /> </label>
+                        <span th:classappend="${#fields.hasErrors('*{secondName}')}? has-error">
+                            <input type="text" th:field="*{secondName}" class="form-control" />
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label class="col-lg-4 col-lg-md-2 col-sm-3 span-top-padding"> <th th:text="#{profile.label.street}" /> </label>
+                        <span th:classappend="${#fields.hasErrors('*{street}')}? has-error">
+                            <input type="text" th:field="*{street}" class="form-control" />
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label class="col-lg-4 col-lg-md-2 col-sm-3 span-top-padding"> <th th:text="#{profile.label.streetNumber}" /> </label>
+                        <span th:classappend="${#fields.hasErrors('*{streetNumber}')}? has-error">
+                            <input type="text" th:field="*{streetNumber}" class="form-control" />
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label class="col-lg-4 col-lg-md-2 col-sm-3 span-top-padding"> <th th:text="#{profile.label.zip}" /> </label>
+                        <span th:classappend="${#fields.hasErrors('*{zip}')}? has-error">
+                            <input type="text" th:field="*{zip}" class="form-control" />
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label class="col-lg-4 col-lg-md-2 col-sm-3 span-top-padding"> <th th:text="#{profile.label.city}" /> </label>
+                        <span th:classappend="${#fields.hasErrors('*{city}')}? has-error">
+                            <input type="text" th:field="*{city}" class="form-control" />
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"> </label>
+                        <label class="col-lg-4 col-lg-md-2 col-sm-3 span-top-padding"> <th th:text="#{profile.label.country}" /> </label>
+
+                        <select class="form-control" th:field="*{country}" style="width: 160px">
+                            <option th:each="country : ${countries}"
+                                    th:value="${country.countryCode}"
+                                    th:text="${country.name}">
+                            </option>
+                        </select>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label class="col-lg-4 col-lg-md-2 col-sm-3 span-top-padding"> <th th:text="#{profile.label.phone}" /> </label>
+                        <span th:classappend="${#fields.hasErrors('*{phone}')}? has-error">
+                            <input type="text" th:field="*{phone}" class="form-control" />
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label class="col-lg-4 col-lg-md-2 col-sm-3 span-top-padding"> <th th:text="#{profile.label.email}" /> </label>
+                        <span th:classappend="${#fields.hasErrors('*{email}')}? has-error">
+                            <input type="text" th:field="*{email}" class="form-control" />
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label class="col-lg-4 col-lg-md-2 col-sm-3 span-top-padding"> <th th:text="#{profile.label.iban}" /> </label>
+                        <span th:classappend="${#fields.hasErrors('*{iban}')}? has-error">
+                            <input type="text" th:field="*{iban}" class="form-control" />
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline" style="padding-bottom: 3%">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label class="col-lg-4 col-lg-md-2 col-sm-3 span-top-padding"> <th th:text="#{profile.label.bic}" /> </label>
+                        <span th:classappend="${#fields.hasErrors('*{bic}')}? has-error">
+                            <input type="text" th:field="*{bic}" class="form-control" />
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-lg-md-12 col-sm-12 col-xs-12">
+                <p>
+                    <label class="glyphicon glyphicon-question-sign" th:title="#{profile.label.tooltip.headingPassword}"></label>
+                    <u> <label th:text="#{profile.label.headingPassword}" /> </u>
+                </p>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label class="col-lg-4 col-lg-md-2 col-sm-3 span-top-padding"> <th th:text="#{profile.label.validPassword}" /> </label>
+                        <span th:classappend="${#fields.hasErrors('*{validPassword}')}? has-error">
+                            <input type="password" th:field="*{validPassword}" class="form-control" />
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label class="col-lg-4 col-lg-md-2 col-sm-3 span-top-padding"> <th th:text="#{profile.label.newPassword}" /> </label>
+                        <span th:classappend="${#fields.hasErrors('*{newPassword}')}? has-error">
+                            <input type="password" th:field="*{newPassword}" class="form-control" />
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label class="col-lg-4 col-lg-md-2 col-sm-3 span-top-padding"> <th th:text="#{profile.label.repeatNewPassword}" /> </label>
+                        <span th:classappend="${#fields.hasErrors('*{repeatNewPassword}')}? has-error">
+                            <input type="password" th:field="*{repeatNewPassword}" class="form-control" />
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-12 col-lg-md-12 col-sm-12 col-xs-12">
+                <div class="btn-toolbar" style="padding-bottom: 5%; padding-top: 1.5%">
+                    <button class="btn btn-primary" style="width: 15%" type="submit"> <th th:text="#{universal.label.save}" /> </button>
+                    <a th:href="@{home}" class="btn btn-primary" style="width: 15%"> <th th:text="#{universal.label.cancel}" /> </a>
+                </div>
+            </div>
+
+            <div>
+                <input type="text" style="visibility: hidden" th:field="*{id}" />
+            </div>
+
+        </form>
+        </div>
+
+    </div>
+
+    <div th:replace="fragments/swa_footer :: swa_footer"></div>
+    </body>
+
+</html>
+

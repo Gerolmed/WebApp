@@ -1,0 +1,63 @@
+
+.navbar-brand {
+    font-size: 180% !important;
+    color: black;
+}
+
+.span-top-padding {
+    margin-top: 1%;
+}
+
+.timeField-side-padding {
+    margin-right: 1.5%; !important;
+    margin-left: 1.5%; !important;
+}
+
+.timeField-width {
+    width: 630px; !important;
+}
+
+.input-warning {
+    border-color: sandybrown;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 50px;
+}
+footer {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 25px;
+    background-color: #f5f5f5;
+}
+
+/* Custom upload button
+------------------------------------------------- */
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}

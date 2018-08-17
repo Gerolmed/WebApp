@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head th:include="fragments/swa_head :: swa_head">
+        <title>SalesWebApp Login</title>
+    </head>
+
+    <body>
+        <div th:replace="fragments/swa_navbarLogin :: swa_navbarLogin"></div>
+
+        <div class="container" style="text-align: center">
+            <h1 style="font-size: 400%"> <th th:text="#{login.label.wellcomeTextLarge}" /> </h1>
+            <h3> <th th:text="#{login.label.wellcomeTextSmall}" /> </h3>
+        </div>
+
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-5 col-md-offset-4 col-lg-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2" style="padding-top: 3.5%">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"> <th th:text="#{login.label.inputRequest}" /> </h3>
+                        </div>
+
+                        <div th:if="${param.profileEmailWasChanged != null}" class="alert alert-success" role="alert">
+                            <p> <th th:text="#{login.success.securityContextChange}" /> </p>
+                        </div>
+
+                        <div th:if="${param.error != null}" class="alert alert-danger" role="alert">
+                            <p> <th th:text="#{login.error.invalid}" /> </p>
+                        </div>
+
+                        <div th:if="${param.logout != null}" class="alert alert-success" role="alert">
+                            <p> <th th:text="#{login.success.logout}" /> </p>
+                        </div>
+
+                        <div th:if="${param.passwordChangeSuccess != null}" class="alert alert-success" role="alert">
+                            <p> <th th:text="#{login.success.pwChangeSuccess}" /> </p>
+                        </div>
+
+                        <div th:if="${param.mailAccountTakesToLongToAnswer != null}" class="alert alert-danger" role="alert">
+                            <p> <th th:text="#{login.error.mail}" /> </p>
+                        </div>
+
+                        <div class="panel-body">
+                            <form th:action="@{/swa/login}" method="post" class="form-horizontal" role="form">
+
+                                <div class="input-group input-sm">
+                                    <label class="input-group-addon" for="userId"><i class="fa fa-user"></i></label> <!-- defines a small box in front of the input textfield and insert a person font -->
+                                    <input type="text" class="form-control" id="userId" name="userId" autofocus="autofocus" th:placeholder="#{login.label.placeholder.username}" required="required" /> <!-- class="form-control" ensures that the input-field(input-sm) is always at 100% size -->
+                                </div>
+
+                                <div class="input-group input-sm">
+                                    <label class="input-group-addon" for="password"><i class="fa fa-lock"></i></label>
+                                    <input type="password" class="form-control" id="password" name="password" th:placeholder="#{login.label.placeholder.password}" required="required" />
+                                </div>
+
+                                <div style="padding-top: 3%; padding-bottom: 4%" >
+                                    <input type="submit" class="btn btn-block btn-primary" th:value="#{login.label.button.login}" />
+                                </div>
+
+                            </form>
+                            <a th:href="@{passwordRequest}"> <span th:text="#{login.label.passwordRecovery}" /> </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:replace="fragments/swa_footer :: swa_footer"></div>
+    </body>
+
+</html>

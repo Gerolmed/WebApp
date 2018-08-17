@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head th:include="fragments/swa_head :: swa_head">
+        <title>SalesWebApp Offer</title>
+    </head>
+
+    <body>
+    <script th:inline="javascript">
+        //<![CDATA[
+        var onFileChange = function (fileInputElement) {
+            var file = fileInputElement.files[0];
+            var infoElement = fileInputElement.parentNode.parentNode.querySelector('.text-info');
+            var errorElement = fileInputElement.parentNode.parentNode.querySelector('.text-danger');
+
+            infoElement.style.display = 'block';
+            errorElement.style.display = 'none';
+
+            infoElement.innerHTML = file.name;
+
+            if (file.size > 5242880) {
+                fileInputElement.value = '';
+                infoElement.style.display = 'none';
+                errorElement.style.display = 'block';
+                errorElement.innerHTML = 'Dateien die größer als 5 MB sind werden nicht hochgeladen.';
+            }
+        };
+        //]]>
+    </script>
+
+    <div th:replace="fragments/swa_navbar :: swa_navbar"></div>
+
+    <div class="container">
+
+        <div class="page-header">
+            <h3><th th:text="#{offer.label.heading}" /></h3>
+        </div>
+
+        <div class="row">
+            <div style="margin-bottom: 10px">
+                <label class="col-lg-3 col-lg-md-3 col-sm-4 col-form-label" style="padding-top: 0.6%">
+                    <label class="glyphicon glyphicon-question-sign" th:title="#{offer.label.tooltip.newOffer}"></label>
+                    <th th:text="#{offer.label.newOffer}" />
+                </label>
+
+                <a th:href="@{/swa/newOfferForRestaurant(id=${offer.idOfRestaurant})}" class="btn btn-primary" style="width: 250px" th:disabled="${dataInputDisabled}" > <th th:text="#{offer.label.button.newOffer}" /> </a>
+            </div>
+
+            <div style="margin-bottom: 10px">
+                <label class="col-lg-3 col-lg-md-3 col-sm-4 col-form-label" style="padding-top: 0.6%">
+                    <label class="glyphicon glyphicon-question-sign" th:title="#{offer.label.tooltip.loadRestaurant}"></label>
+                    <th th:text="#{offer.label.loadRestaurant}" />
+                </label>
+
+                <select class="form-control" onchange="window.location.href='/swa/newOfferForRestaurant?id=' + this.value" style="width: 350px">
+                    <option th:each="restaurant : ${restaurantList}"
+                            th:value="${restaurant.id}"
+                            th:text="${restaurant.name}"
+                            selected="selected">
+                    </option>
+                    <option disabled="disabled" selected="selected"></option>
+                </select>
+            </div>
+
+            <div>
+                <label class="col-lg-3 col-lg-md-3 col-sm-4 col-form-label" style="padding-top: 0.6%">
+                    <label class="glyphicon glyphicon-question-sign" th:title="#{offer.label.tooltip.loadOffer}"></label>
+                    <th th:text="#{offer.label.loadOffer}" />
+                </label>
+
+                <select class="form-control" onchange="window.location.href='/swa/offer?id=' + this.value" style="width: 350px" th:disabled="${dataInputDisabled}">
+                    <option th:each="offer : ${offerList}"
+                            th:value="${offer.id}"
+                            th:text="${offer.title}"
+                            selected="selected">
+                    </option>
+                    <option disabled="disabled" selected="selected"></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="page-header">
+            <h3><th th:text="${restaurantName}" /></h3>
+        </div>
+
+        <form th:action="@{/swa/saveOffer}" th:object="${offer}" enctype="multipart/form-data" method="post">
+        <div class="row">
+            <ul th:if="${#fields.hasErrors('*')}">
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}" class="text-danger" />
+            </ul>
+
+            <div class="col-lg-6 col-lg-md-12 col-sm-12">
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label class="span-top-padding" style="width: 175px"> <th th:text="#{offer.label.title}" /> </label>
+
+                        <span th:classappend="${#fields.hasErrors('*{title}')}? has-error">
+                            <input type="text" th:field="*{title}" class="form-control" th:disabled="${dataInputDisabled}" style="width: 250px"/>
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label class="span-top-padding" style="width: 175px"> <th th:text="#{offer.label.offerId}" /> </label>
+
+                        <span th:classappend="${#fields.hasErrors('*{id}')}? has-error">
+                            <input data-th-if="${offer.id != 0}" type="text" class="form-control" name="id" id="id" data-th-value="${offer.id}" style="width: 250px" disabled="disabled"/>
+                            <input data-th-if="${offer.id == 0}" type="text" class="form-control" name="id" id="id" style="width: 250px" disabled="disabled" />
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" th:title="#{offer.label.tooltip.price}"></label>
+                        <label class="span-top-padding" style="width: 175px"> <th th:text="#{offer.label.price}" /> </label>
+
+                        <span th:classappend="${#fields.hasErrors('*{priceAsString}')}? has-error">
+                            <input type="text" th:field="*{priceAsString}" class="form-control" th:disabled="${dataInputDisabled}" style="width: 250px"/>
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" th:title="#{offer.label.tooltip.points}"></label>
+                        <label class="span-top-padding" style="width: 175px"> <th th:text="#{offer.label.points}" /> </label>
+
+                        <span th:classappend="${#fields.hasErrors('*{neededPointsAsString}')}? has-error">
+                            <input type="text" th:field="*{neededPointsAsString}" class="form-control" th:disabled="${dataInputDisabled}" style="width: 250px"/>
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-lg-md-12 col-sm-12">
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" th:title="#{offer.validation.preparationTime}"></label>
+                        <label class="span-top-padding" style="width: 175px"> <th th:text="#{offer.label.preparationTime}" /> </label>
+
+                        <span th:classappend="${#fields.hasErrors('*{preparationTimeAsString}')}? has-error">
+                            <input type="text" th:field="*{preparationTimeAsString}" class="form-control" th:disabled="${dataInputDisabled}" style="width: 250px"/>
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" th:title="#{offer.validation.startDate}"></label>
+                        <label class="span-top-padding" style="width: 175px"> <th th:text="#{offer.label.startDate}" /> </label>
+
+                        <span th:classappend="${#fields.hasErrors('*{startDateAsString}')}? has-error">
+                            <input type="text" th:field="*{startDateAsString}" class="form-control" th:disabled="${dataInputDisabled}" style="width: 250px"/>
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" th:title="#{offer.validation.endDate}"></label>
+                        <label class="span-top-padding" style="width: 175px"> <th th:text="#{offer.label.endDate}" /> </label>
+
+                        <span th:classappend="${#fields.hasErrors('*{endDateAsString}')}? has-error">
+                            <input type="text" th:field="*{endDateAsString}" class="form-control" th:disabled="${dataInputDisabled}" style="width: 250px"/>
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label class="span-top-padding" style="width: 175px"> <th th:text="#{offer.label.courseType}" /> </label>
+
+                        <select class="form-control" th:field="${offer.courseTypeAsString}" th:disabled="${dataInputDisabled}" style="width: 250px">
+                            <option th:each="courseType : ${courseTypes}"
+                                    th:value="${courseType.name}"
+                                    th:text="${courseType.name}">
+                            </option>
+                        </select>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 25px">
+            <div class="col-lg-6 col-lg-md-6 col-sm-12">
+                <p class="form-inline">
+                    <label class="glyphicon glyphicon-question-sign" th:title="#{offer.label.tooltip.additives}" ></label>
+                    <label class="span-top-padding"> <th th:text="#{offer.label.additives}" /> </label>
+                </p>
+
+                <div class="col-lg-offset-1 col-lg-md-offset-1 col-sm-offset-1">
+                    <div th:each="additive : ${additivesList}">
+                        <input type="checkbox" th:field="${offer.additivesAsString}" th:value="${additive.name}" th:disabled="${dataInputDisabled}" />
+                        <label>
+                            <span th:text="${additive.description}" />
+                            <span class="glyphicon glyphicon-question-sign" th:title="${additive.name}" />
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-lg-md-6 col-sm-12">
+                <p class="form-inline">
+                    <label class="glyphicon glyphicon-question-sign" th:title="#{offer.label.tooltip.allergenics}" ></label>
+                    <label class="span-top-padding"> <th th:text="#{offer.label.allergenic}" /> </label>
+                </p>
+
+                <div class="col-lg-offset-1 col-lg-md-offset-1 col-sm-offset-1">
+                    <div th:each="allergenic : ${allergenicsList}">
+                        <input type="checkbox" th:field="${offer.allergenicsAsString}" th:value="${allergenic.name}" th:disabled="${dataInputDisabled}" />
+                        <label>
+                            <span th:text="${allergenic.name}" />
+                            <span class="glyphicon glyphicon-question-sign" th:title="${allergenic.description}" />
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 25px">
+            <div class="col-lg-6 col-lg-md-6 col-sm-12">
+                <p class="form-inline">
+                    <label class="glyphicon glyphicon-question-sign" th:title="#{offer.label.tooltip.validness}" ></label>
+                    <label class="span-top-padding"> <th th:text="#{offer.label.validness}" /> </label>
+                </p>
+
+                <div class="col-lg-offset-1 col-lg-md-offset-1 col-sm-offset-1">
+                    <div th:each="offerTime, stat : ${offer.offerTimes}">
+                        <p class="form-inline">
+                            <label class="span-top-padding col-lg-3 col-lg-md-3 col-sm-3">
+                                <span th:switch="${offerTime.dayNumber}">
+                                    <span th:case="'1'"><span th:text="#{universal.label.monday}" /></span>
+                                    <span th:case="'2'"><span th:text="#{universal.label.tuesday}" /></span>
+                                    <span th:case="'3'"><span th:text="#{universal.label.wednesday}" /></span>
+                                    <span th:case="'4'"><span th:text="#{universal.label.thursday}" /></span>
+                                    <span th:case="'5'"><span th:text="#{universal.label.friday}" /></span>
+                                    <span th:case="'6'"><span th:text="#{universal.label.saturday}" /></span>
+                                    <span th:case="'7'"><span th:text="#{universal.label.sunday}" /></span>
+                                </span>
+                            </label>
+
+                            <span class="timeField-side-padding">
+                                <input class="form-control" type="text" th:value="*{offerTimes[__${stat.index}__].startTime}" maxlength="5" style="width: 62px" disabled="disabled"/>
+                            </span>
+                            <span th:text="#{offer.label.timeTo}"></span>
+                            <span class="timeField-side-padding">
+                                <input class="form-control" type="text" th:value="*{offerTimes[__${stat.index}__].endTime}" maxlength="5" style="width: 62px" disabled="disabled"/>
+                            </span>
+
+                            <label style="margin-left: 25px">
+                                <input type="checkbox" th:field="${offer.validnessDaysOfWeekAsString}" th:value="${offerTime.dayNumberAsString}" />
+                            </label>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-lg-md-6 col-sm-12">
+                <p class="form-inline">
+                    <label class="glyphicon glyphicon-question-sign" th:title="#{offer.label.tooltip.description}" ></label>
+                    <label class="span-top-padding"> <th th:text="#{offer.label.description}" /> </label>
+                </p>
+
+                <div class="col-lg-offset-1 col-lg-md-offset-1 col-sm-offset-1">
+                    <span th:classappend="${#fields.hasErrors('*{description}')}? has-error">
+                        <textarea class="form-control" rows="5" th:field="${offer.description}" th:disabled="${dataInputDisabled}" />
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 25px">
+            <div class="col-lg-12 col-lg-md-12 col-sm-12" style="margin-top: 25px">
+                <p class="form-inline">
+                    <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                    <label class="span-top-padding"> <th th:text="#{offer.label.offerImages}" /> </label>
+                </p>
+            </div>
+
+            <div class="col-lg-12 col-lg-md-12 col-sm-12">
+                <div class="col-lg-offset-1 col-lg-md-offset-1 col-sm-offset-1">
+
+                    <img th:src="@{'data:image/jpeg;base64,'+ ${firstPicture}}" style="float: left; width: 30%; margin-right: 1%; margin-bottom: 0.5em" />
+                    <img th:src="@{'data:image/jpeg;base64,'+ ${secondPicture}}" style="float: left; width: 30%; margin-right: 1%; margin-bottom: 0.5em" />
+                    <img th:src="@{'data:image/jpeg;base64,'+ ${thirdPicture}}" style="float: left; width: 30%; margin-right: 1%; margin-bottom: 0.5em" />
+                    <p style="clear: both;" />
+
+                    <!-- first two buttons -->
+                    <span style="float: left; width: 30%; margin-bottom: 0.5em; margin-left: 1.25%">
+                        <div class="btn btn-primary btn-file" style="width: 150px" th:disabled="${dataInputDisabled}">
+                            <span th:text="#{offer.label.addImage}" />
+                            <input th:field="${offer.firstOfferImage}" onchange="onFileChange(this)" type="file" />
+                        </div>
+
+                        <div style="margin-top: 10px">
+                            <a th:href="@{/swa/offer/remove(offerPhotoId=${idOfFirstPicture})}" class="btn btn-sm btn-danger" th:disabled="${firstPictureDeleteDisabled}" style="width: 150px">
+                                <span class="glyphicon glyphicon-remove" /> <span style="font-size: 125%" th:text="#{offer.label.deleteImage}" />
+                            </a>
+                        </div>
+
+                        <p class="text-info" style="overflow: hidden; margin-right: 20px; white-space: nowrap; margin-top: 10px"></p>
+                        <p class="text-danger" style="margin-top: 10px"></p>
+                    </span>
+
+                    <!-- second two buttons -->
+                    <span style="float: left; width: 30%; margin-bottom: 0.5em; margin-left: 1.25%">
+                        <div class="btn btn-primary btn-file" style="width: 150px" th:disabled="${dataInputDisabled}">
+                            <span th:text="#{offer.label.addImage}" />
+                            <input th:field="${offer.secondOfferImage}" onchange="onFileChange(this)" type="file" />
+                        </div>
+
+                        <div style="margin-top: 10px">
+                            <a th:href="@{/swa/offer/remove(offerPhotoId=${idOfSecondPicture})}" class="btn btn-sm btn-danger" th:disabled="${secondPictureDeleteDisabled}" style="width: 150px">
+                                <span class="glyphicon glyphicon-remove" /> <span style="font-size: 125%" th:text="#{offer.label.deleteImage}" />
+                            </a>
+                        </div>
+
+                        <p class="text-info" style="overflow: hidden; margin-right: 20px; white-space: nowrap; margin-top: 10px"></p>
+                        <p class="text-danger" style="margin-top: 10px"></p>
+                    </span>
+
+                    <!-- third two buttons -->
+                    <span style="float: left; width: 30%; margin-bottom: 0.5em; margin-left: 1.25%">
+                        <div class="btn btn-primary btn-file" style="width: 150px" th:disabled="${dataInputDisabled}">
+                            <span th:text="#{offer.label.addImage}" />
+                            <input th:field="${offer.thirdOfferImage}" onchange="onFileChange(this)" type="file" />
+                        </div>
+
+                        <div style="margin-top: 10px">
+                            <a th:href="@{/swa/offer/remove(offerPhotoId=${idOfThirdPicture})}" class="btn btn-sm btn-danger" th:disabled="${thirdPictureDeleteDisabled}" style="width: 150px">
+                                <span class="glyphicon glyphicon-remove" /> <span style="font-size: 125%" th:text="#{offer.label.deleteImage}" />
+                            </a>
+                        </div>
+
+                        <p class="text-info" style="overflow: hidden; margin-right: 20px; white-space: nowrap; margin-top: 10px"></p>
+                        <p class="text-danger" style="margin-top: 10px"></p>
+                    </span>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 25px">
+            <div class="col-lg-6 col-lg-md-6 col-sm-12">
+                <p class="form-inline">
+                    <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                    <label class="span-top-padding"> <th th:text="#{offer.label.commentOfLastChange}" /> </label>
+                </p>
+
+                <div class="col-lg-offset-1 col-lg-md-offset-1 col-sm-offset-1">
+                    <textarea class="form-control" rows="5" th:field="${offer.commentOfLastChange}" disabled="disabled" />
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-lg-md-6 col-sm-12">
+                <p class="form-inline">
+                    <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                    <label class="span-top-padding"> <th th:text="#{offer.label.newChangeComment}" /> </label>
+                </p>
+
+                <div class="col-lg-offset-1 col-lg-md-offset-1 col-sm-offset-1">
+                    <span th:classappend="${#fields.hasErrors('*{newChangeComment}')}? has-error">
+                        <textarea class="form-control" rows="5" th:field="${offer.newChangeComment}" th:disabled="${dataInputDisabled}" />
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 25px">
+            <div class="btn-toolbar" style="margin-bottom: 5%; margin-top: 1.5%">
+                <button class="btn btn-primary" name="home" value="home" type="submit" th:disabled="${dataInputDisabled}" style="width: 225px" > <th th:text="#{offer.label.saveToHome}" /> </button>
+                <button class="btn btn-primary" name="offerOverview" value="offerOverview" type="submit" th:disabled="${dataInputDisabled}" style="width: 225px" > <th th:text="#{offer.label.saveToOfferOverview}" /> </button>
+                <a th:href="@{/swa/home}" class="btn btn-primary" style="width: 150px"> <th th:text="#{universal.label.cancel}" /> </a>
+            </div>
+        </div>
+
+        </form>
+    </div>
+
+    <div th:replace="fragments/swa_footer :: swa_footer"></div>
+    </body>
+</html>

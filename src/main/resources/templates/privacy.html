@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/head :: includes">
+</head>
+<body>
+
+	<div th:replace="fragments/navigation :: navbar"></div>
+	<div style="margin-left: 25px; margin-right: 25px;">
+	<h3 th:text="#{privacy.headline.0.1}"></h3>
+	<h4 th:text="#{privacy.headline.0.2}"></h4>
+		<div><p th:text="#{privacy.paragraph.0}"></p></div>
+	<h4 th:text="#{privacy.headline.1}"></h4>
+		<div><p th:text="#{privacy.paragraph.1.1}"></p></div>
+		<div><p th:text="#{privacy.paragraph.1.2}"></p></div>
+		<div><p th:text="#{privacy.paragraph.1.3}"></p></div>
+		<div><p th:text="#{privacy.paragraph.1.4}"></p></div>
+		<div><p th:text="#{privacy.paragraph.1.5}"></p></div>
+		<div><p th:text="#{privacy.paragraph.1.6}"></p></div>
+		<div><p th:text="#{privacy.paragraph.1.7}"></p></div>		
+	<h4 th:text="#{privacy.headline.2}"></h4>
+			<div><p th:text="#{privacy.paragraph.2}"></p></div>
+	<h4 th:text="#{privacy.headline.3}"></h4>
+			<div><p th:text="#{privacy.paragraph.3.1}"></p></div>
+			<div><p th:text="#{privacy.paragraph.3.2}"></p></div>
+	<h4 th:text="#{privacy.headline.4}"></h4>
+			<div><p th:text="#{privacy.paragraph.4}"></p></div>
+	</div>
+	<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

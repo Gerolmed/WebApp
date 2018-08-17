@@ -1,0 +1,347 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>edu.hm.cs.projektstudium.findlunch</groupId>
+	<artifactId>webapp</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<!-- STANDALONE TOMCAT CONFIG: Change packaging from jar to war for traditional deployment -->
+	<!-- <packaging>war</packaging> -->
+	<packaging>jar</packaging>
+
+	<name>FindLunch WebApp</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<docker.image.prefix>findlunch</docker.image.prefix>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<integration-tests.skip>true</integration-tests.skip>
+		<database.url>jdbc:mariadb://localhost:3306</database.url>
+		<database.user>root</database.user>
+		<database.password>root</database.password>
+		<database.schema>findlunch</database.schema>
+		<database.resources>classes/db/migration</database.resources>
+		<dependency.locations.enabled>false</dependency.locations.enabled>
+		<!-- STANDALONE TOMCAT CONFIG: For standalone tomcat deployment set correct version of the tomcat to use -->
+		<!-- <tomcat.version>8.0.20</tomcat.version> -->
+		<!--<tomcat.version>8.0.36</tomcat.version>-->
+	</properties>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.3.3.RELEASE</version>
+	</parent>
+	<repositories>
+		<repository>
+			<id>spring</id>
+			<url>http://repo.spring.io/plugins-release</url>
+		</repository>
+	</repositories>
+	<dependencies>
+		<!-- STANDALONE TOMCAT CONFIG: Set the embedded tomcat to provided to not interfere with the standalone tomcat-->
+		<!-- <dependency>
+ 			       <groupId>org.springframework.boot</groupId>
+    			    <artifactId>spring-boot-starter-tomcat</artifactId>
+   				     <scope>provided</scope>
+   			 </dependency>
+   		-->
+		<dependency>
+			<groupId>com.gemstone.gemfire</groupId>
+			<artifactId>gemfire</artifactId>
+			<version>8.1.0</version>
+		</dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.8.0</version>
+            <scope>compile</scope>
+        </dependency>
+		<dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.8.0</version>
+            <scope>compile</scope>
+	    </dependency>
+		<!-- TEST FOR EMAIl -->
+		<dependency>
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-mail</artifactId>
+    		<version>1.4.3.RELEASE</version>
+		</dependency>
+		<dependency>
+    		<groupId>org.springframework</groupId>
+    		<artifactId>spring-context-support</artifactId>
+    		<version>4.3.8.RELEASE</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>3.5.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-springsecurity4</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.maps</groupId>
+			<artifactId>google-maps-services</artifactId>
+			<version>0.1.14</version>
+		</dependency>
+		<dependency>
+			<groupId>org.imgscalr</groupId>
+			<artifactId>imgscalr-lib</artifactId>
+			<version>4.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.3.2</version>
+		</dependency>
+
+		<!-- QR-Code -->
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>javase</artifactId>
+			<version>2.2</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.lowagie/itext -->
+		<dependency>
+    		<groupId>com.lowagie</groupId>
+    		<artifactId>itext</artifactId>
+    		<version>2.1.7</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.20</version>
+			<scope>provided</scope>
+		</dependency>
+
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>3.3.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>datatables</artifactId>
+            <version>1.10.12</version>
+        </dependency>
+
+		<!-- Used for integration testing -->
+		<dependency>
+			<groupId>com.jayway.restassured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>2.9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>6.2.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+		</dependency>
+
+		<!-- Braintree integration! Needed for PayPal integration! -->
+		<dependency>
+			<groupId>com.braintreepayments.gateway</groupId>
+			<artifactId>braintree-java</artifactId>
+			<version>2.74.1</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.interceptor</groupId>
+			<artifactId>javax.interceptor-api</artifactId>
+			<version>1.2</version>
+		</dependency>
+	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>prod</id>
+			<activation>
+            	<activeByDefault>true</activeByDefault>
+       		</activation>
+			<properties>
+				<finalName.append>prod</finalName.append>
+				<integration-tests.skip>true</integration-tests.skip>
+			</properties>
+		</profile>
+		<profile>
+			<id>testinstance</id>
+			<properties>
+				<finalName.append>testinstance</finalName.append>
+				<integration-tests.skip>true</integration-tests.skip>
+				<copy.application-testinstance.properties>true</copy.application-testinstance.properties>
+			</properties>
+		</profile>
+	</profiles>
+
+	<build>
+		<finalName>findLunch-webapp-${finalName.append}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+	           <artifactId>maven-antrun-plugin</artifactId>
+	           <executions>
+	           	<execution>
+	           		<phase>prepare-package</phase>
+	           		<goals>
+	           			<goal>run</goal>
+	           		</goals>
+	           		<configuration>
+	           			<target if="copy.application-testinstance.properties">
+	           				<echo message="start to copy testinstance properties"/>
+	           				<delete file="${project.build.outputDirectory}/application.properties"/>
+				            <delete file="${project.build.outputDirectory}/data.sql"/>
+				            <delete file="${project.build.outputDirectory}/schema.sql"/>
+	           				
+	           				<copy file="src/main/resources/application-testinstance.properties" tofile="${project.build.outputDirectory}/application.properties"/>
+				            <copy file="src/main/resources/dataTestinstance.sql" tofile="${project.build.outputDirectory}/data.sql"/>
+				            <copy file="src/main/resources/schemaTestinstance.sql" tofile="${project.build.outputDirectory}/schema.sql"/>
+				            <echo message="finished to copy testinstance properties"/>
+	           			</target>
+	           		</configuration>
+	           	</execution>
+	           </executions>
+	        </plugin>
+			<plugin>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>integration-test</id>
+						<goals>
+							<goal>integration-test</goal>
+						</goals>
+						<configuration>
+							<skipTests>${integration-tests.skip}</skipTests>
+							<includes>
+								<include>**/*IT.class</include>
+							</includes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+				<version>1.4.3</version>
+                <configuration>
+                    <repository>${docker.image.prefix}/${project.artifactId}</repository>
+                    <buildArgs>
+                        <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+                        <DB_INIT>target/${database.resources}</DB_INIT>
+                        <SUP_CONF>target/classes/docker/supervisord.conf</SUP_CONF>
+                        <STARTUP>target/classes/docker/findlunch.sh</STARTUP>
+                    </buildArgs>
+                </configuration>
+            </plugin>
+			<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
+				<version>5.0.7</version>
+				<configuration>
+					<url>${database.url}</url>
+					<user>${database.user}</user>
+					<password>${database.password}</password>
+					<schemas>
+						<schema>${database.schema}</schema>
+					</schemas>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.mariadb.jdbc</groupId>
+						<artifactId>mariadb-java-client</artifactId>
+						<version>2.2.0 </version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.0.1</version>
+				<configuration>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.7</version>
+			</plugin>
+		</plugins>
+	</reporting>
+</project>

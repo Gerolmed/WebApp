@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head th:include="fragments/swa_head :: swa_head">
+        <title>SalesWebApp OfferChangeRequest</title>
+    </head>
+
+    <body>
+    <script th:inline="javascript">
+        //<![CDATA[
+        var onFileChange = function (fileInputElement) {
+            var file = fileInputElement.files[0];
+            var infoElement = fileInputElement.parentNode.parentNode.querySelector('.text-info');
+            var errorElement = fileInputElement.parentNode.parentNode.querySelector('.text-danger');
+
+            infoElement.style.display = 'block';
+            errorElement.style.display = 'none';
+
+            infoElement.innerHTML = file.name;
+
+            if (file.size > 5242880) {
+                fileInputElement.value = '';
+                infoElement.style.display = 'none';
+                errorElement.style.display = 'block';
+                errorElement.innerHTML = 'Dateien die größer als 5 MB sind werden nicht hochgeladen.';
+            }
+        };
+        //]]>
+    </script>
+
+    <div th:replace="fragments/swa_navbar :: swa_navbar"></div>
+
+    <div class="container">
+
+        <div class="page-header">
+            <h3><th th:text="#{offerChangeRequest.label.heading}" /></h3>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 col-lg-md-12 col-sm-12">
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label style="width: 175px"> <th th:text="#{offerChangeRequest.label.restaurantName}" /> </label>
+
+                        <span>
+                            <input type="text" th:value="${restaurantName}" class="form-control"  disabled="disabled" style="width: 250px"/>
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label style="width: 175px"> <th th:text="#{offerChangeRequest.label.changeRequestId}" /> </label>
+
+                        <span>
+                            <input type="text" th:value="${toDoId}" class="form-control"  disabled="disabled" style="width: 250px"/>
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label style="width: 175px"> <th th:text="#{offerChangeRequest.label.offerId}" /> </label>
+
+                        <span>
+                            <input type="text" th:value="${existingOffer.id}" class="form-control"  disabled="disabled" style="width: 250px"/>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <form th:action="@{/swa/saveOfferChangeRequest}" th:object="${offer}" enctype="multipart/form-data" method="post">
+        <div class="row">
+            <ul th:if="${#fields.hasErrors('*')}">
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}" class="text-danger" />
+            </ul>
+
+            <!-- The left part of the dialog contains the unchangeable information of the existingOffer -->
+            <div class="col-lg-6 col-lg-md-6 co-sm-12">
+                <div class="page-header">
+                    <h3><th th:text="#{offerChangeRequest.label.headingExistingOffer}" /></h3>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label style="width: 175px"> <th th:text="#{offer.label.title}" /> </label>
+
+                        <span>
+                            <input type="text" th:value="${existingOffer.title}" class="form-control" disabled="disabled" style="width: 250px"/>
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label style="width: 175px"> <th th:text="#{offer.label.price}" /> </label>
+
+                        <span>
+                            <input type="text" th:value="${existingOffer.priceAsString}" class="form-control" disabled="disabled" style="width: 250px"/>
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label style="width: 175px"> <th th:text="#{offer.label.points}" /> </label>
+
+                        <span>
+                            <input type="text" th:value="${existingOffer.neededPointsAsString}" class="form-control" disabled="disabled" style="width: 250px"/>
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label style="width: 175px"> <th th:text="#{offer.label.preparationTime}" /> </label>
+
+                        <span>
+                            <input type="text" th:value="${existingOffer.preparationTimeAsString}" class="form-control" disabled="disabled" style="width: 250px"/>
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label style="width: 175px"> <th th:text="#{offer.label.startDate}" /> </label>
+
+                        <span>
+                            <input type="text" th:value="${existingOffer.startDateAsString}" class="form-control" disabled="disabled" style="width: 250px"/>
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label style="width: 175px"> <th th:text="#{offer.label.endDate}" /> </label>
+
+                        <span>
+                            <input type="text" th:value="${existingOffer.endDateAsString}" class="form-control" disabled="disabled" style="width: 250px"/>
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label style="width: 175px"> <th th:text="#{offer.label.courseType}" /> </label>
+
+                        <span>
+                            <input type="text" th:value="${existingOffer.courseTypeAsString}" class="form-control" disabled="disabled" style="width: 250px"/>
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden" ></label>
+                        <label style="width: 175px; vertical-align: top"> <th th:text="#{offer.label.description}" /> </label>
+
+                        <span>
+                            <textarea class="form-control" rows="7" th:field="${existingOffer.description}" disabled="disabled" style="width: 350px" />
+                        </span>
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- The right part of the dialog contains the changeable information of the changedOffer -->
+            <div class="col-lg-6 col-lg-md-6 co-sm-12">
+                <div class="page-header">
+                    <h3><th th:text="#{offerChangeRequest.label.headingChangedOffer}" /></h3>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label style="width: 175px"> <th th:text="#{offer.label.title}" /> </label>
+
+                        <span th:classappend="${#fields.hasErrors('*{title}')}? has-error">
+                            <input type="text" th:field="${offer.title}" class="form-control" style="width: 250px" th:style="${titleChanged ? 'border-color: sandybrown; width: 250px' : 'width: 250px'}"/>
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" th:title="#{offer.label.tooltip.price}"></label>
+                        <label style="width: 175px"> <th th:text="#{offer.label.price}" /> </label>
+
+                        <span th:classappend="${#fields.hasErrors('*{priceAsString}')}? has-error">
+                            <input type="text" th:field="${offer.priceAsString}" class="form-control" style="width: 250px" th:style="${priceChanged ? 'border-color: sandybrown; width: 250px' : 'width: 250px'}"/>
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" th:title="#{offer.label.tooltip.points}"></label>
+                        <label style="width: 175px"> <th th:text="#{offer.label.points}" /> </label>
+
+                        <span th:classappend="${#fields.hasErrors('*{neededPointsAsString}')}? has-error">
+                            <input type="text" th:field="${offer.neededPointsAsString}" class="form-control" style="width: 250px" th:style="${neededPointsChanged ? 'border-color: sandybrown; width: 250px' : 'width: 250px'}"/>
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label style="width: 175px"> <th th:text="#{offer.label.preparationTime}" /> </label>
+
+                        <span th:classappend="${#fields.hasErrors('*{preparationTimeAsString}')}? has-error">
+                            <input type="text" th:field="${offer.preparationTimeAsString}" class="form-control" style="width: 250px" th:style="${preparationTimeChanged ? 'border-color: sandybrown; width: 250px' : 'width: 250px'}"/>
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label style="width: 175px"> <th th:text="#{offer.label.startDate}" /> </label>
+
+                        <span th:classappend="${#fields.hasErrors('*{startDateAsString}')}? has-error">
+                            <input type="text" th:field="${offer.startDateAsString}" class="form-control" style="width: 250px" th:style="${startDateChanged ? 'border-color: sandybrown; width: 250px' : 'width: 250px'}"/>
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label style="width: 175px"> <th th:text="#{offer.label.endDate}" /> </label>
+
+                        <span th:classappend="${#fields.hasErrors('*{endDateAsString}')}? has-error">
+                            <input type="text" th:field="${offer.endDateAsString}" class="form-control" style="width: 250px" th:style="${endDateChanged ? 'border-color: sandybrown; width: 250px' : 'width: 250px'}"/>
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label style="width: 175px"> <th th:text="#{offer.label.courseType}" /> </label>
+
+                        <select class="form-control" th:field="${offer.courseTypeAsString}" style="width: 250px">
+                            <option th:each="courseType : ${courseTypesList}"
+                                    th:value="${courseType.name}"
+                                    th:text="${courseType.name}">
+                            </option>
+                        </select>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" th:title="#{offer.label.tooltip.description}" style="vertical-align: top" ></label>
+                        <label style="width: 175px; vertical-align: top"> <th th:text="#{offer.label.description}" /> </label>
+
+                        <span>
+                            <span th:classappend="${#fields.hasErrors('*{description}')}? has-error">
+                                <textarea class="form-control" rows="7" th:field="${offer.description}" style="width: 350px" th:style="${descriptionChanged ? 'border-color: sandybrown; width: 350px' : 'width: 350px'}"/>
+                            </span>
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-12 col-lg-md-12 co-sm-12">
+                <!-- Additves -->
+                <div class="col-lg-offset-2 col-lg-md-offset-2 col-sm-offset-2 col-lg-8 col-lg-md-8 col-sm-8">
+                    <div class="page-header">
+                        <h3><th th:text="#{offerChangeRequest.label.overviewAdditives}" /></h3>
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th style="width: 64%">
+                                <span class="glyphicon glyphicon-question-sign" th:title="#{offer.label.tooltip.additives}" />
+                                <span th:text="#{offerChangeRequest.label.description}" />
+                            </th>
+                            <th style="width: 18%; text-align: center">
+                                <span th:text="#{offerChangeRequest.label.headingExistingOffer}" />
+                            </th>
+                            <th style="width: 18%; text-align: center">
+                                <span th:text="#{offerChangeRequest.label.headingChangedOffer}" />
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="additive : ${additivesList}">
+                            <td>
+                                <span class="glyphicon glyphicon-question-sign" th:title="${additive.name}" style="margin-left: 1.5%" />
+                                <span th:text="${additive.description}" />
+                            </td>
+                            <td style="text-align: center">
+                                <input type="checkbox" th:field="${existingOffer.additivesAsString}" th:value="${additive.name}" disabled="disabled" />
+                            </td>
+                            <td style="text-align: center">
+                                <input type="checkbox" th:field="${offer.additivesAsString}" th:value="${additive.name}" />
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Allergenics -->
+                <div class="col-lg-offset-2 col-lg-md-offset-2 col-sm-offset-2 col-lg-8 col-lg-md-8 col-sm-8">
+                    <div class="page-header">
+                        <h3><th th:text="#{offerChangeRequest.label.overviewAllergenics}" /></h3>
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th style="width: 64%">
+                                <span class="glyphicon glyphicon-question-sign" th:title="#{offer.label.tooltip.allergenics}" />
+                                <span th:text="#{offerChangeRequest.label.description}" />
+                            </th>
+                            <th style="width: 18%; text-align: center">
+                                <span th:text="#{offerChangeRequest.label.headingExistingOffer}" />
+                            </th>
+                            <th style="width: 18%; text-align: center">
+                                <span th:text="#{offerChangeRequest.label.headingChangedOffer}" />
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="allergenic : ${allergenicsList}">
+                            <td>
+                                <span class="glyphicon glyphicon-question-sign" th:title="${allergenic.description}" style="margin-left: 1.5%" />
+                                <span th:text="${allergenic.name}" />
+                            </td>
+                            <td style="text-align: center">
+                                <input type="checkbox" th:field="${existingOffer.allergenicsAsString}" th:value="${allergenic.name}" disabled="disabled" />
+                            </td>
+                            <td style="text-align: center">
+                                <input type="checkbox" th:field="${offer.allergenicsAsString}" th:value="${allergenic.name}" />
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Offertimes -->
+                <div class="col-lg-offset-2 col-lg-md-offset-2 col-sm-offset-2 col-lg-8 col-lg-md-8 col-sm-8">
+                    <div class="page-header">
+                        <h3><th th:text="#{offerChangeRequest.label.overviewOfferTimes}" /></h3>
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th style="width: 64%">
+                                <span class="glyphicon glyphicon-question-sign" th:title="#{offer.label.tooltip.validness}" />
+                                <span th:text="#{offer.label.validness}" />
+                            </th>
+                            <th style="width: 18%; text-align: center">
+                                <span th:text="#{offerChangeRequest.label.headingExistingOffer}" />
+                            </th>
+                            <th style="width: 18%; text-align: center">
+                                <span th:text="#{offerChangeRequest.label.headingChangedOffer}" />
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="offerTime,stat : ${existingOffer.offerTimes}">
+                            <td>
+                                <p class="form-inline">
+                                    <label style="width: 100px">
+                                        <span th:switch="${offerTime.dayNumber}">
+                                            <span th:case="'1'"><span th:text="#{universal.label.monday}" /></span>
+                                            <span th:case="'2'"><span th:text="#{universal.label.tuesday}" /></span>
+                                            <span th:case="'3'"><span th:text="#{universal.label.wednesday}" /></span>
+                                            <span th:case="'4'"><span th:text="#{universal.label.thursday}" /></span>
+                                            <span th:case="'5'"><span th:text="#{universal.label.friday}" /></span>
+                                            <span th:case="'6'"><span th:text="#{universal.label.saturday}" /></span>
+                                            <span th:case="'7'"><span th:text="#{universal.label.sunday}" /></span>
+                                        </span>
+                                    </label>
+
+                                    <label style="width: 250px">
+                                        <span class="timeField-side-padding">
+                                            <input class="form-control" type="text" th:value="${existingOffer.offerTimes[__${stat.index}__].startTime}" maxlength="5" style="width: 63px" disabled="disabled"/>
+                                        </span>
+                                        <span th:text="#{offer.label.timeTo}"></span>
+                                        <span class="timeField-side-padding">
+                                            <input class="form-control" type="text" th:value="${existingOffer.offerTimes[__${stat.index}__].endTime}" maxlength="5" style="width: 63px" disabled="disabled"/>
+                                        </span>
+                                    </label>
+                                </p>
+                            </td>
+
+                            <td style="text-align: center; vertical-align: middle">
+                                <input type="checkbox" th:field="${existingOffer.validnessDaysOfWeekAsString}" th:value="${offerTime.dayNumberAsString}" disabled="disabled" />
+                            </td>
+
+                            <td style="text-align: center; vertical-align: middle">
+                                <input type="checkbox" th:field="${offer.validnessDaysOfWeekAsString}" th:value="${offerTime.dayNumberAsString}" />
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- OfferImages (existingOffer) -->
+                <div class="col-lg-6 col-lg-md-6 col-sm-12">
+                    <div class="page-header">
+                        <h3><th th:text="#{offerChangeRequest.label.originalImages}" /></h3>
+                    </div>
+
+                    <div class="col-lg-offset-2 col-lg-md-offset-2 col-sm-offset-2">
+                        <div>
+                            <img th:src="@{'data:image/jpeg;base64,'+ ${existingOfferFirstPicture}}" style="margin-left: 8%; margin-bottom: 35px; width: 280px; height: 190px" />
+                        </div>
+                        <div>
+                            <img th:src="@{'data:image/jpeg;base64,'+ ${existingOfferSecondPicture}}" style="margin-left: 8%; margin-bottom: 35px; width: 280px; height: 190px"  />
+                        </div>
+                        <div>
+                            <img th:src="@{'data:image/jpeg;base64,'+ ${existingOfferThirdPicture}}" style="margin-left: 8%; margin-bottom: 20px; width: 280px; height: 190px"  />
+                        </div>
+                        <p style="clear: both;" />
+                    </div>
+                </div>
+
+                <!-- OfferImages (changedOffer) -->
+                <div class="col-lg-6 col-lg-md-6 col-sm-12">
+                    <div class="page-header">
+                        <h3><th th:text="#{offerChangeRequest.label.changedOfferImages}" /></h3>
+                    </div>
+
+                    <div>
+                        <!-- first image of the offerChange Request -->
+                        <span class="col-lg-7 col-lg-md-7 col-sm-7">
+                            <img th:src="@{'data:image/jpeg;base64,'+ ${firstPicture}}" style="margin-bottom: 25px; width: 280px; height: 190px" />
+                        </span>
+                        <span class="col-lg-5 col-lg-md-5 col-sm-5" style="margin-top: 4%">
+                            <div style="margin-bottom: 15px">
+                                <span style="width: 160px; display: inline-block" th:text="#{offerChangeRequest.label.keepImage}" />
+                                <input type="checkbox" th:checked="${offer.keepFirstImage}" name="keepFirstImage" th:disabled="${!offer.keepFirstImage}"/>
+                            </div>
+
+                            <div style="margin-top: 10px">
+                                <a th:href="@{/offerChangeRequest/removePhoto(Id=${idOfFirstChangedPicture})}" class="btn btn-sm btn-danger" th:disabled="${firstChangedPictureDeleteDisabled}" style="width: 150px">
+                                    <span class="glyphicon glyphicon-remove" /> <span style="font-size: 125%" th:text="#{offer.label.deleteImage}" />
+                                </a>
+                            </div>
+
+                            <div class="btn btn-primary btn-file" style="width: 150px; margin-top: 10px">
+                                <span th:text="#{offer.label.addImage}" />
+                                <input th:field="${offer.firstOfferImage}" onchange="onFileChange(this)" type="file" />
+                            </div>
+
+                            <p class="text-info" style="overflow: hidden; margin-right: 20px; white-space: nowrap; margin-top: 10px"></p>
+                            <p class="text-danger" style="margin-top: 10px"></p>
+                        </span>
+                        <p style="clear: both;" />
+
+                        <!-- second image of the offerChange Request -->
+                        <span class="col-lg-7 col-lg-md-7 col-sm-7">
+                            <img th:src="@{'data:image/jpeg;base64,'+ ${secondPicture}}" style="margin-bottom: 25px; width: 280px; height: 190px" />
+                        </span>
+                        <span class="col-lg-5 col-lg-md-5 col-sm-5" style="margin-top: 4%">
+                            <div style="margin-bottom: 15px">
+                                <span style="width: 160px; display: inline-block" th:text="#{offerChangeRequest.label.keepImage}" />
+                                <input type="checkbox" th:checked="${offer.keepSecondImage}" name="keepSecondImage" th:disabled="${!offer.keepSecondImage}"/>
+                            </div>
+
+                            <div style="margin-top: 10px">
+                                <a th:href="@{/swa/offerChangeRequest/removePhoto(Id=${idOfSecondChangedPicture})}" class="btn btn-sm btn-danger" th:disabled="${secondChangedPictureDeleteDisabled}" style="width: 150px">
+                                    <span class="glyphicon glyphicon-remove" /> <span style="font-size: 125%" th:text="#{offer.label.deleteImage}" />
+                                </a>
+                            </div>
+
+                            <div class="btn btn-primary btn-file" style="width: 150px; margin-top: 10px">
+                                <span th:text="#{offer.label.addImage}" />
+                                <input th:field="${offer.secondOfferImage}" onchange="onFileChange(this)" type="file" />
+                            </div>
+
+                            <p class="text-info" style="overflow: hidden; margin-right: 20px; white-space: nowrap; margin-top: 10px"></p>
+                            <p class="text-danger" style="margin-top: 10px"></p>
+                        </span>
+                        <p style="clear: both;" />
+
+                        <!-- third image of the offerChange Request -->
+                        <span class="col-lg-7 col-lg-md-7 col-sm-7">
+                            <img th:src="@{'data:image/jpeg;base64,'+ ${thirdPicture}}" style="margin-bottom: 25px; width: 280px; height: 190px" />
+                        </span>
+                        <span class="col-lg-5 col-lg-md-5 col-sm-5" style="margin-top: 4%">
+                            <div style="margin-bottom: 15px">
+                                <span style="width: 160px; display: inline-block" th:text="#{offerChangeRequest.label.keepImage}" />
+                                <input type="checkbox" th:checked="${offer.keepThirdImage}" name="keepThirdImage" th:disabled="${!offer.keepThirdImage}" />
+                            </div>
+
+                            <div style="margin-top: 10px">
+                                <a th:href="@{/swa/offerChangeRequest/removePhoto(Id=${idOfThirdChangedPicture})}" class="btn btn-sm btn-danger" th:disabled="${thirdChangedPictureDeleteDisabled}" style="width: 150px">
+                                    <span class="glyphicon glyphicon-remove" /> <span style="font-size: 125%" th:text="#{offer.label.deleteImage}" />
+                                </a>
+                            </div>
+
+                            <div class="btn btn-primary btn-file" style="width: 150px; margin-top: 10px">
+                                <span th:text="#{offer.label.addImage}" />
+                                <input th:field="${offer.thirdOfferImage}" onchange="onFileChange(this)" type="file" />
+                            </div>
+
+                            <p class="text-info" style="overflow: hidden; margin-right: 20px; white-space: nowrap; margin-top: 10px"></p>
+                            <p class="text-danger" style="margin-top: 10px"></p>
+                        </span>
+                        <p style="clear: both;" />
+                    </div>
+                </div>
+
+                <!-- restaurant change comment -->
+                <div class="col-lg-6 col-lg-md-6 col-sm-12">
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label class="span-top-padding"> <th th:text="#{offer.label.commentOfLastChange}" /> </label>
+                    </p>
+
+                    <div class="col-lg-offset-1 col-lg-md-offset-1 col-sm-offset-1">
+                        <textarea class="form-control" rows="5" th:field="${existingOffer.commentOfLastChange}" disabled="disabled" />
+                    </div>
+                </div>
+
+                <!-- sales person change comment -->
+                <div class="col-lg-6 col-lg-md-6 col-sm-12">
+                    <p class="form-inline">
+                        <label class="glyphicon glyphicon-question-sign" style="visibility: hidden"></label>
+                        <label class="span-top-padding"> <th th:text="#{offer.label.newChangeComment}" /> </label>
+                    </p>
+
+                    <div class="col-lg-offset-1 col-lg-md-offset-1 col-sm-offset-1">
+                        <span th:classappend="${#fields.hasErrors('*{newChangeComment}')}? has-error">
+                            <textarea class="form-control" rows="5" th:field="${offer.newChangeComment}" />
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 25px">
+            <div class="btn-toolbar" style="margin-bottom: 5%; margin-top: 1.5%">
+                <button class="btn btn-primary" style="width: 20%" type="submit"> <th th:text="#{offerChangeRequest.button.saveChangedOffer}" /> </button>
+                <a th:href="@{/swa/offerChangeRequest/remove(toDoId=${toDoId})}" class="btn btn-danger" style="width: 20%"> <th th:text="#{offerChangeRequest.button.deleteChangeOffer}" /> </a>
+                <a th:href="@{/swa/home}" class="btn btn-primary" style="width: 150px"> <th th:text="#{universal.label.cancel}" /> </a>
+            </div>
+        </div>
+
+        </form>
+    </div>
+
+    <div th:replace="fragments/swa_footer :: swa_footer"></div>
+    </body>
+</html>

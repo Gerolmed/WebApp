@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <body>
+        <div class="container-fluid">
+            <nav class="navbar navbar-default" th:fragment="swa_navbarLogin">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/swa/login">
+                        <b>S</b>ales<b>W</b>eb<b>A</b>pp
+                    </a>
+                </div>
+
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <section>
+                            <div style="padding-right: 50px; padding-top: 15px">
+                                <a href="?language=de">Deutsch</a> |
+                                <a href="?language=en">English</a>
+                            </div>
+                        </section>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </body>
+</html>

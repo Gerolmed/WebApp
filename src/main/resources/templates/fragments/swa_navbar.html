@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <body>
+        <div class="container-fluid">
+            <nav class="navbar navbar-default" th:fragment="swa_navbar">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle col-lg-2 col-lg-md-2 col-sm-12 col-xs-12" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/swa/home" style="font-size: 175%">
+                        <b>S</b>ales<b>W</b>eb<b>A</b>pp
+                    </a>
+                </div>
+
+                <div class="navbar-collapse collapse" style="padding-top: 1.3%">
+                    <ul class="list-inline navbar-left col-lg-7 col-lg-md-6 col-sm-7">
+                        <li><a class="btn-link" th:href="@{/swa/newRestaurant}"> <th th:text="#{navbar.label.restaurant}" /> </a></li>
+                        <li><a class="btn-link" th:href="@{/swa/emptyOfferOverview}"> <th th:text="#{navbar.label.offerOverview}" /> </a></li>
+                        <li><a class="btn-link" th:href="@{/swa/profile}"><th th:text="#{navbar.label.dropdown.userProfilSettings}" /></a></li>
+                    </ul>
+                    <ul class="list-inline navbar-right col-lg-2 co-lg-md-3 col-sm-4">
+                        <li><a th:href="@{/swa/home/logout}">Logout</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </body>
+</html>

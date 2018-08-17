@@ -1,6 +1,7 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.controller.rest;
 
 import com.google.gson.JsonObject;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.Platform;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Version;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PlatformRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.VersionRepository;
@@ -59,8 +60,47 @@ public class CheckDataRestController {
 
 		JsonObject jsonObject = new JsonObject();
 
-		jsonObject.addProperty("validVersion", isValidVersion(version_name));
-        jsonObject.addProperty("validPlatform", true);
+		//Update version counter and check version
+        {
+            Version oldVersion = versionRepository.findByVersionName(version_name);
+
+            jsonObject.addProperty("validVersion", isValidVersion(version_name));
+
+            // if there is no such version stored
+            if (oldVersion == null) {
+                Version newVersion = new Version(version_name);
+                newVersion.setCount(1);
+                versionRepository.save(newVersion);
+            }
+            // refresh the version
+            else {
+                oldVersion.setCount(oldVersion.getCount()+1);
+                versionRepository.save(oldVersion);
+            }
+        }
+
+        //Update platform counter and check platform
+        {
+            Platform oldPlatform = platformRepository.findByPlatformName(platform_name);
+
+            jsonObject.addProperty("validPlatform", true);
+
+            // if there is no such platform stored
+            if (oldPlatform == null) {
+                Platform newPlatform = new Platform(platform_name);
+                newPlatform.setCount(1);
+                platformRepository.save(newPlatform);
+
+                jsonObject.addProperty("value", "New Platform entry created");
+            }
+            // refresh the platform
+            else {
+                oldPlatform.setCount(oldPlatform.getCount()+1);
+                platformRepository.save(oldPlatform);
+
+                jsonObject.addProperty("value", "Value updated");
+            }
+        }
 
 		return  new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
     }

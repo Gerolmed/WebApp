@@ -81,22 +81,27 @@ public final class BraintreeController {
      */
     public static boolean confirmTransaction(Reservation reservation){
         if (reservation.getPpTransactionId() != null){
-            Result<Transaction> settlementResult = BraintreeController.gateway.transaction()
-                    .submitForSettlement(reservation.getPpTransactionId());
-            if (settlementResult.isSuccess()){
-                reservation.setPpTransactionFinished(true);
-                LOGGER.info(LogUtils.getDefaultSchedulerMessage(Thread.currentThread().getStackTrace()[1].getMethodName(),
-                        "Successfully settled payment for transaction "+ reservation.getId()));
-                return true;
-            }
-            else {
-                reservation.setPpTransactionFinished(false);
-                LOGGER.error(LogUtils.getDefaultSchedulerMessage(Thread.currentThread().getStackTrace()[1]
-                        .getMethodName(), "Failed settling payment for transaction "+ reservation.getId()));
-                for (ValidationError error : settlementResult.getErrors().getAllDeepValidationErrors()) {
-                    LOGGER.error(LogUtils.getDefaultSchedulerMessage(Thread.currentThread().getStackTrace()[1]
-                            .getMethodName(),error.getMessage()));
+            try { //Because testdata has invalid transaction id`s => errors might pop up
+                Result<Transaction> settlementResult = BraintreeController.gateway.transaction()
+                        .submitForSettlement(reservation.getPpTransactionId());
+                if (settlementResult.isSuccess()){
+                    reservation.setPpTransactionFinished(true);
+                    LOGGER.info(LogUtils.getDefaultSchedulerMessage(Thread.currentThread().getStackTrace()[1].getMethodName(),
+                            "Successfully settled payment for transaction "+ reservation.getId()));
+                    return true;
                 }
+                else {
+                    reservation.setPpTransactionFinished(false);
+                    LOGGER.error(LogUtils.getDefaultSchedulerMessage(Thread.currentThread().getStackTrace()[1]
+                            .getMethodName(), "Failed settling payment for transaction "+ reservation.getId()));
+                    for (ValidationError error : settlementResult.getErrors().getAllDeepValidationErrors()) {
+                        LOGGER.error(LogUtils.getDefaultSchedulerMessage(Thread.currentThread().getStackTrace()[1]
+                                .getMethodName(),error.getMessage()));
+                    }
+                    return false;
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
                 return false;
             }
         }
